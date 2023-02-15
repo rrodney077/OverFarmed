@@ -5,8 +5,17 @@ using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
-    [SerializeField] GameObject camSwitcher;
+    //[SerializeField] GameObject camSwitcher;
     [SerializeField] private float speed = 5f;
+
+    [SerializeField] LayerMask boxObjectLayer;
+    [SerializeField] Transform boxCheck;
+    [SerializeField] Transform objectHolder;
+    public bool touchingBox;
+
+    [Header("For Handling Seed Types")]
+    public bool isPotatoSeed;
+    [SerializeField] GameObject potatoSeed;
 
     private Vector2 movementInput = Vector2.zero;
     Vector3 forward;
@@ -28,6 +37,8 @@ public class Movement : MonoBehaviour
     void Update()
     {
         Move();
+        ItemOverlap();
+        SeedManager();
     }
 
     void Move()
@@ -40,14 +51,54 @@ public class Movement : MonoBehaviour
 
         transform.forward = heading;
 
-        Vector3 movement = Vector3.Normalize(heading) * speed * Time.deltaTime;
+        //Vector3 movement = Vector3.Normalize(heading) * speed * Time.deltaTime;
 
-        //transform.position += rightMov;
-        //transform.position += upMov;
+        transform.position += rightMov;
+        transform.position += upMov;
+        //transform.position += movement;
+        
+        
+        //camSwitcher.GetComponent<CamSwitcher>().isMoveable = false;
 
-        transform.position += movement;
-        camSwitcher.GetComponent<CamSwitcher>().isMoveable = false;
-
+    }
+    void ItemOverlap()
+    {
+        if (Physics.CheckBox(boxCheck.position, boxCheck.transform.localScale, boxCheck.transform.rotation.normalized, boxObjectLayer, QueryTriggerInteraction.Ignore))
+        {
+            touchingBox = true;
+        }
+        else
+        {
+            touchingBox = false;
+        }
+    }
+    void SeedManager()
+    {
+        RaycastHit hit;
+        if (touchingBox && Physics.Raycast(boxCheck.position, Vector3.forward, out hit))
+        {
+            if (hit.collider.tag == "PotatoBox")
+            {
+                isPotatoSeed = true;
+            }
+            else
+            {
+                isPotatoSeed = false;
+            }
+        }
+    }
+    public void Interact()
+    {
+        if (touchingBox && isPotatoSeed)
+        {
+            Instantiate(potatoSeed, objectHolder.position, objectHolder.rotation, potatoSeed.transform.parent = transform);
+        }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Debug.DrawRay(transform.position, Vector3.forward, Color.green);
+        Gizmos.color = Color.red;
+        Gizmos.DrawCube(boxCheck.transform.position, boxCheck.transform.localScale);
     }
 }
 
