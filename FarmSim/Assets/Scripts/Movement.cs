@@ -12,10 +12,13 @@ public class Movement : MonoBehaviour
     [SerializeField] Transform boxCheck;
     [SerializeField] Transform objectHolder;
     public bool touchingBox;
+    
 
     [Header("For Handling Seed Types")]
     public bool isPotatoSeed;
     [SerializeField] GameObject potatoSeed;
+    [SerializeField] LayerMask seedLayer;
+    public bool isholding;
 
     private Vector2 movementInput = Vector2.zero;
     Vector3 forward;
@@ -38,6 +41,7 @@ public class Movement : MonoBehaviour
     {
         Move();
         ItemOverlap();
+        SeedOverlap();
         SeedManager();
     }
 
@@ -71,7 +75,22 @@ public class Movement : MonoBehaviour
         {
             touchingBox = false;
         }
+        
+
+       //Collider[] egg = Physics.OverlapBox(boxCheck.position, boxCheck.transform.localScale, boxCheck.transform.rotation.normalized, boxObjectLayer, QueryTriggerInteraction.Ignore);
     }
+    void SeedOverlap()
+    {
+        if (Physics.CheckBox(objectHolder.position, objectHolder.transform.localScale, objectHolder.rotation.normalized, seedLayer, QueryTriggerInteraction.Ignore))
+        {
+            isholding = true;
+        }
+        else
+        {
+            isholding = false;
+        }
+    }
+
     void SeedManager()
     {
         RaycastHit hit;
@@ -89,7 +108,7 @@ public class Movement : MonoBehaviour
     }
     public void Interact()
     {
-        if (touchingBox && isPotatoSeed)
+        if (touchingBox && isPotatoSeed && !isholding)
         {
             Instantiate(potatoSeed, objectHolder.position, objectHolder.rotation, potatoSeed.transform.parent = transform);
         }
@@ -99,6 +118,8 @@ public class Movement : MonoBehaviour
         Debug.DrawRay(transform.position, Vector3.forward, Color.green);
         Gizmos.color = Color.red;
         Gizmos.DrawCube(boxCheck.transform.position, boxCheck.transform.localScale);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawCube(objectHolder.position, objectHolder.transform.localScale);
     }
 }
 
