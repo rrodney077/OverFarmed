@@ -20,6 +20,11 @@ public class Movement : MonoBehaviour
     [SerializeField] LayerMask seedLayer;
     public bool isholding;
 
+
+    [Header("for planting seeds")]
+    GameObject[] tiles;
+    List<Collider> seedColliders = new List<Collider>();
+
     private Vector2 movementInput = Vector2.zero;
     Vector3 forward;
     Vector3 right;
@@ -30,6 +35,8 @@ public class Movement : MonoBehaviour
         forward.y = 0;
         forward = Vector3.Normalize(forward);
         right = Quaternion.Euler(new Vector3(0, 90, 0)) * forward;
+
+        tiles = GameObject.FindGameObjectsWithTag("Soil");
     }
 
     public void onMove(InputAction.CallbackContext context)
@@ -74,20 +81,21 @@ public class Movement : MonoBehaviour
         else
         {
             touchingBox = false;
-        }
-        
-
-       //Collider[] egg = Physics.OverlapBox(boxCheck.position, boxCheck.transform.localScale, boxCheck.transform.rotation.normalized, boxObjectLayer, QueryTriggerInteraction.Ignore);
+        }  
     }
     void SeedOverlap()
     {
-        if (Physics.CheckBox(objectHolder.position, objectHolder.transform.localScale, objectHolder.rotation.normalized, seedLayer, QueryTriggerInteraction.Ignore))
+        
+        if (Physics.OverlapBox(objectHolder.position, objectHolder.transform.localScale, objectHolder.rotation.normalized, seedLayer, QueryTriggerInteraction.Ignore).Length != 0)
         {
-            isholding = true;
+            seedColliders.Add(Physics.OverlapBox(objectHolder.position, objectHolder.transform.localScale, objectHolder.rotation.normalized, seedLayer, QueryTriggerInteraction.Ignore)[0]);
+            isholding = true;                   
         }
         else
         {
+            seedColliders.Clear();
             isholding = false;
+            
         }
     }
 
@@ -111,6 +119,14 @@ public class Movement : MonoBehaviour
         if (touchingBox && isPotatoSeed && !isholding)
         {
             Instantiate(potatoSeed, objectHolder.position, objectHolder.rotation, potatoSeed.transform.parent = transform);
+        }
+        foreach (GameObject g in tiles)
+        {
+            if (isholding && g.GetComponent<Tiles>().isSelectable)
+            {
+                seedColliders[0].gameObject.transform.position = new Vector3(g.transform.position.x, g.transform.position.y + .7f,g.transform.position.z);
+                seedColliders[0].gameObject.transform.SetParent(g.transform);
+            }
         }
     }
     private void OnDrawGizmosSelected()
