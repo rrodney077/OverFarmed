@@ -8,6 +8,7 @@ public class Tiles : MonoBehaviour
     [SerializeField] Transform playerCheck;
     [SerializeField] LayerMask playerLayer;
     [SerializeField] LayerMask SeedLayer;
+    //[SerializeField] LayerMask plantLayer;
 
     public bool isSelectable = false;
     public bool isAvailable = false;
@@ -24,7 +25,7 @@ public class Tiles : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckPlant();
+        CheckSeed();
 
         if (Physics.CheckSphere(playerCheck.position, .6f, playerLayer) && isAvailable)
         {
@@ -41,7 +42,7 @@ public class Tiles : MonoBehaviour
         }
     }
 
-    void CheckPlant()
+    void CheckSeed()
     {
         if (Physics.CheckSphere(playerCheck.position, .5f, SeedLayer))
         {
@@ -52,6 +53,10 @@ public class Tiles : MonoBehaviour
             isAvailable = true;
         }
     }
+   /* void CheckPlant()
+    {
+
+    }*/
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5419808418429528504}
   - component: {fileID: 745835861276231659}
   - component: {fileID: 6332706719512267864}
+  - component: {fileID: 9221768383515476210}
   m_Layer: 7
   m_Name: PotatoSeed
   m_TagString: Untagged
@@ -97,3 +98,16 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &9221768383515476210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9038685901752979949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdadbea2e8f6fd54a85409dd5015a766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  plant: {fileID: 6188908727703544247, guid: 534ed9643581ad14f8863537ce4380aa, type: 3}

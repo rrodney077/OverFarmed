@@ -27,7 +27,7 @@ public class Timer : MonoBehaviour
     {
         if (currentTime > 0)
         {
-            time -= 1 * Time.deltaTime;
+            currentTime -= 1 * Time.deltaTime;
             //print((int)currentTime);
 
         }
