@@ -294,9 +294,12 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 256
-  SeedLayer:
+  seedLayer:
     serializedVersion: 2
     m_Bits: 128
+  plantLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   isSelectable: 0
   isAvailable: 0
 --- !u!1 &6832833777900876268

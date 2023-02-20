@@ -9,6 +9,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private float speed = 5f;
 
     [SerializeField] LayerMask boxObjectLayer;
+    [SerializeField] LayerMask plantLayer;
     [SerializeField] Transform boxCheck;
     [SerializeField] Transform objectHolder;
     public bool touchingBox;
@@ -16,14 +17,21 @@ public class Movement : MonoBehaviour
 
     [Header("For Handling Seed Types")]
     public bool isPotatoSeed;
+    public bool isCornSeed;
+    public bool isCarrotSeed;
     [SerializeField] GameObject potatoSeed;
+    [SerializeField] GameObject cornSeed;
+    [SerializeField] GameObject carrotSeed;
     [SerializeField] LayerMask seedLayer;
-    public bool isholding;
+    public bool isholding;   
 
 
     [Header("for planting seeds")]
     GameObject[] tiles;
     List<Collider> seedColliders = new List<Collider>();
+    List<Collider> plantColliders = new List<Collider>();
+    public bool canLiftPlant;
+
 
     private Vector2 movementInput = Vector2.zero;
     Vector3 forward;
@@ -50,6 +58,7 @@ public class Movement : MonoBehaviour
         ItemOverlap();
         SeedOverlap();
         SeedManager();
+        PlantManager();
     }
 
     void Move()
@@ -98,7 +107,6 @@ public class Movement : MonoBehaviour
             
         }
     }
-
     void SeedManager()
     {
         RaycastHit hit;
@@ -107,18 +115,65 @@ public class Movement : MonoBehaviour
             if (hit.collider.tag == "PotatoBox")
             {
                 isPotatoSeed = true;
+                isCarrotSeed = false;
+                isCornSeed = false;
+            }
+            else if (hit.collider.tag == "CornBox")
+            {
+                isCornSeed = true;
+                isPotatoSeed = false;
+                isCarrotSeed = false;
+            }
+            else if (hit.collider.tag == "CarrotBox")
+            {
+                isCarrotSeed = true;
+                isPotatoSeed = false;
+                isCornSeed = false;
             }
             else
             {
                 isPotatoSeed = false;
+                isCarrotSeed = false;
+                isCornSeed = false;
             }
         }
     }
+    void PlantManager()
+    {
+        if(Physics.OverlapBox(boxCheck.position, boxCheck.transform.localScale, boxCheck.transform.rotation.normalized, plantLayer, QueryTriggerInteraction.Ignore).Length != 0)
+        {
+            plantColliders.Add(Physics.OverlapBox(boxCheck.position, boxCheck.transform.localScale, boxCheck.transform.rotation.normalized, plantLayer, QueryTriggerInteraction.Ignore)[0]);
+            canLiftPlant = true;
+        }
+        else
+        {            
+            plantColliders.Clear();
+            canLiftPlant = false;
+            
+        }
+    }
+    
     public void Interact()
     {
         if (touchingBox && isPotatoSeed && !isholding)
         {
             Instantiate(potatoSeed, objectHolder.position, objectHolder.rotation, potatoSeed.transform.parent = transform);
+        }
+        else if (touchingBox && isCornSeed && !isholding)
+        {
+            Instantiate(cornSeed, objectHolder.position, objectHolder.rotation, potatoSeed.transform.parent = transform);
+        }
+        else if (touchingBox && isCarrotSeed && !isholding)
+        {
+            Instantiate(carrotSeed, objectHolder.position, objectHolder.rotation, potatoSeed.transform.parent = transform);
+        }
+
+
+
+        if (!isholding && canLiftPlant)
+        {
+            plantColliders[0].transform.position = new Vector3(objectHolder.position.x, objectHolder.position.y + 1, objectHolder.position.z);
+            plantColliders[0].transform.SetParent(transform);
         }
         foreach (GameObject g in tiles)
         {
@@ -128,6 +183,7 @@ public class Movement : MonoBehaviour
                 seedColliders[0].gameObject.transform.SetParent(g.transform);
             }
         }
+       
     }
     private void OnDrawGizmosSelected()
     {

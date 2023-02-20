@@ -6,12 +6,26 @@ public class PlantGrowth : MonoBehaviour
 {
     [SerializeField] GameObject plant;
     float time;
-    int maxTime = 10;
+    int potatoTime = 10;
+    int cornTime = 5;
+    int carrotTime = 20;
 
     // Start is called before the first frame update
     void Start()
     {
-        time = maxTime;
+        if(gameObject.tag == "PotatoSeed")
+        {
+            time = potatoTime;
+        }
+        else if (gameObject.tag == "CornSeed")
+        {
+            time = cornTime;
+        }
+        else if (gameObject.tag == "CarrotSeed")
+        {
+            time = carrotTime;
+        }
+        
     }
 
     // Update is called once per frame
