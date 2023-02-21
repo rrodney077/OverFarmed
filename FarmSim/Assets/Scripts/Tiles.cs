@@ -5,10 +5,13 @@ using UnityEngine;
 public class Tiles : MonoBehaviour
 {
     [SerializeField] GameObject tempCan;
+    [SerializeField] Transform playerCheck;
+    [SerializeField] LayerMask playerLayer;
+    [SerializeField] LayerMask seedLayer;
+    [SerializeField] LayerMask plantLayer;
 
-    private bool isSelectable = false;
-
-    GameObject player;
+    public bool isSelectable = false;
+    public bool isAvailable = false;
 
     private Color baseColor;
     private Color newColor = Color.cyan;
@@ -17,48 +20,46 @@ public class Tiles : MonoBehaviour
     void Start()
     {
         baseColor = GetComponent<Renderer>().material.color;
-
-        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
     void Update()
     {
-        ColourHandler();
-        SelectionHandler();
-    }
-    private void OnMouseDown()
-    {
-        Debug.Log("Goku???");
-    }
+        CheckPlant();
 
-    void ColourHandler()
-    {
-        float distance;
-        distance = Vector3.Distance(player.transform.position, transform.position);
-        
-
-        if (distance <= 1.8f)
+        if (Physics.CheckSphere(playerCheck.position, .6f, playerLayer) && isAvailable)
         {
             isSelectable = true;
             gameObject.GetComponent<Renderer>().material.color = newColor;
+            tempCan.GetComponent<Canvas>().enabled = true;
+
         }
         else
         {
             isSelectable = false;
             gameObject.GetComponent<Renderer>().material.color = baseColor;
-            
+            tempCan.GetComponent<Canvas>().enabled = false;
         }
     }
-    void SelectionHandler()
+
+    void CheckPlant()
     {
-        if (isSelectable)
+        if (Physics.CheckSphere(playerCheck.position, .5f, seedLayer) || Physics.CheckSphere(playerCheck.position, .5f, plantLayer))
         {
-            tempCan.SetActive(true);
+            isAvailable = false;
         }
         else
         {
-            tempCan.SetActive(false);
+            isAvailable = true;
         }
     }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(playerCheck.position, .6f);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(playerCheck.position, .5f);
+    }
+
 }

@@ -360,6 +360,7 @@
 "Assets/Scripts/CameraScripts/CamFollow.cs"
 "Assets/Scripts/CameraScripts/CamSwitcher.cs"
 "Assets/Scripts/Movement.cs"
+"Assets/Scripts/PlantGrowth.cs"
 "Assets/Scripts/Tiles.cs"
 "Assets/Scripts/Timer.cs"
 "Assets/TextMesh Pro/Examples & Extras/Scripts/Benchmark01.cs"
