@@ -12,6 +12,7 @@ TagManager:
   - PotatoSeed
   - CornSeed
   - CarrotSeed
+  - SaleBox
   layers:
   - Default
   - TransparentFX
@@ -24,7 +25,7 @@ TagManager:
   - Player
   - Soil
   - Plant
-  - 
+  - SaleBox
   - 
   - 
   - 
